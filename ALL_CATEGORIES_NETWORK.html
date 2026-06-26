@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 850px;
+                 background-color: white;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#7A005E", "font": {"color": "black"}, "id": "Forestry", "label": "Forestry", "shape": "dot", "title": "Forestry (Primary Theme)", "value": 67}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Circular Economy", "label": "Circular Economy", "shape": "dot", "title": "Circular Economy (Secondary Topics)", "value": 19}, {"color": "#3D8664", "font": {"color": "black"}, "id": "Literature review", "label": "Literature review", "shape": "dot", "title": "Literature review (Methodology)", "value": 95}, {"color": "#EABA77", "font": {"color": "black"}, "id": "National", "label": "National", "shape": "dot", "title": "National (Regional Focus)", "value": 249}, {"color": "#3D8664", "font": {"color": "black"}, "id": "Remote sensing", "label": "Remote sensing", "shape": "dot", "title": "Remote sensing (Methodology)", "value": 88}, {"color": "#7A005E", "font": {"color": "black"}, "id": "Hydrology", "label": "Hydrology", "shape": "dot", "title": "Hydrology (Primary Theme)", "value": 133}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Drought", "label": "Drought", "shape": "dot", "title": "Drought (Secondary Topics)", "value": 20}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Floods", "label": "Floods", "shape": "dot", "title": "Floods (Secondary Topics)", "value": 30}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Precipitation", "label": "Precipitation", "shape": "dot", "title": "Precipitation (Secondary Topics)", "value": 50}, {"color": "#3D8664", "font": {"color": "black"}, "id": "Statistical modelling", "label": "Statistical modelling", "shape": "dot", "title": "Statistical modelling (Methodology)", "value": 239}, {"color": "#7A005E", "font": {"color": "black"}, "id": "Urban Environment", "label": "Urban Environment", "shape": "dot", "title": "Urban Environment (Primary Theme)", "value": 36}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Air Temperature", "label": "Air Temperature", "shape": "dot", "title": "Air Temperature (Secondary Topics)", "value": 12}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Urban Heat Island", "label": "Urban Heat Island", "shape": "dot", "title": "Urban Heat Island (Secondary Topics)", "value": 24}, {"color": "#7A005E", "font": {"color": "black"}, "id": "Tourism", "label": "Tourism", "shape": "dot", "title": "Tourism (Primary Theme)", "value": 15}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Ski Industry", "label": "Ski Industry", "shape": "dot", "title": "Ski Industry (Secondary Topics)", "value": 10}, {"color": "#3D8664", "font": {"color": "black"}, "id": "Questionnaire survey", "label": "Questionnaire survey", "shape": "dot", "title": "Questionnaire survey (Methodology)", "value": 58}, {"color": "#EABA77", "font": {"color": "black"}, "id": "Pamporovo resort", "label": "Pamporovo resort", "shape": "dot", "title": "Pamporovo resort (Regional Focus)", "value": 10}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Adaptation", "label": "Adaptation", "shape": "dot", "title": "Adaptation (Secondary Topics)", "value": 16}, {"color": "#7A005E", "font": {"color": "black"}, "id": "Agriculture", "label": "Agriculture", "shape": "dot", "title": "Agriculture (Primary Theme)", "value": 130}, {"color": "#EABA77", "font": {"color": "black"}, "id": "South Bulgaria", "label": "South Bulgaria", "shape": "dot", "title": "South Bulgaria (Regional Focus)", "value": 10}, {"color": "#7A005E", "font": {"color": "black"}, "id": "Public Health", "label": "Public Health", "shape": "dot", "title": "Public Health (Primary Theme)", "value": 29}, {"color": "#3D8664", "font": {"color": "black"}, "id": "Field experiment", "label": "Field experiment", "shape": "dot", "title": "Field experiment (Methodology)", "value": 95}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Resilience", "label": "Resilience", "shape": "dot", "title": "Resilience (Secondary Topics)", "value": 12}, {"color": "#EABA77", "font": {"color": "black"}, "id": "Northeast Bulgaria", "label": "Northeast Bulgaria", "shape": "dot", "title": "Northeast Bulgaria (Regional Focus)", "value": 12}, {"color": "#7A005E", "font": {"color": "black"}, "id": "Biodiversity", "label": "Biodiversity", "shape": "dot", "title": "Biodiversity (Primary Theme)", "value": 129}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Species Distribution", "label": "Species Distribution", "shape": "dot", "title": "Species Distribution (Secondary Topics)", "value": 16}, {"color": "#7A005E", "font": {"color": "black"}, "id": "Policy \u0026 Governance", "label": "Policy \u0026 Governance", "shape": "dot", "title": "Policy \u0026 Governance (Primary Theme)", "value": 56}, {"color": "#3D8664", "font": {"color": "black"}, "id": "Laboratory analysis", "label": "Laboratory analysis", "shape": "dot", "title": "Laboratory analysis (Methodology)", "value": 41}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Ecosystem Services", "label": "Ecosystem Services", "shape": "dot", "title": "Ecosystem Services (Secondary Topics)", "value": 30}, {"color": "#EABA77", "font": {"color": "black"}, "id": "Western Rhodopes", "label": "Western Rhodopes", "shape": "dot", "title": "Western Rhodopes (Regional Focus)", "value": 11}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Maize", "label": "Maize", "shape": "dot", "title": "Maize (Secondary Topics)", "value": 12}, {"color": "#7A005E", "font": {"color": "black"}, "id": "Infrastructure", "label": "Infrastructure", "shape": "dot", "title": "Infrastructure (Primary Theme)", "value": 28}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "Sentinel (Copernicus Satellite Data)", "label": "Sentinel (Copernicus Satellite Data)", "shape": "dot", "title": "Sentinel (Copernicus Satellite Data) (Methodology (more detailed))", "value": 67}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "Landsat (OLI / TIRS) satellites", "label": "Landsat (OLI / TIRS) satellites", "shape": "dot", "title": "Landsat (OLI / TIRS) satellites (Methodology (more detailed))", "value": 28}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "ERA5", "label": "ERA5", "shape": "dot", "title": "ERA5 (Methodology (more detailed))", "value": 17}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Spatial Distribution", "label": "Spatial Distribution", "shape": "dot", "title": "Spatial Distribution (Secondary Topics)", "value": 10}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Vulnerability Index", "label": "Vulnerability Index", "shape": "dot", "title": "Vulnerability Index (Secondary Topics)", "value": 11}, {"color": "#EABA77", "font": {"color": "black"}, "id": "Central Northern Bulgaria", "label": "Central Northern Bulgaria", "shape": "dot", "title": "Central Northern Bulgaria (Regional Focus)", "value": 12}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Extreme Events", "label": "Extreme Events", "shape": "dot", "title": "Extreme Events (Secondary Topics)", "value": 7}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Farmers\u0027 Survey", "label": "Farmers\u0027 Survey", "shape": "dot", "title": "Farmers\u0027 Survey (Secondary Topics)", "value": 7}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "SPI-3", "label": "SPI-3", "shape": "dot", "title": "SPI-3 (Methodology (more detailed))", "value": 7}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "Correlation analysis", "label": "Correlation analysis", "shape": "dot", "title": "Correlation analysis (Methodology (more detailed))", "value": 7}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "NDVI", "label": "NDVI", "shape": "dot", "title": "NDVI (Methodology (more detailed))", "value": 36}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "NDWI", "label": "NDWI", "shape": "dot", "title": "NDWI (Methodology (more detailed))", "value": 26}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "NDGI", "label": "NDGI", "shape": "dot", "title": "NDGI (Methodology (more detailed))", "value": 19}, {"color": "#EABA77", "font": {"color": "black"}, "id": "Rila Mountain", "label": "Rila Mountain", "shape": "dot", "title": "Rila Mountain (Regional Focus)", "value": 20}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "SPEI", "label": "SPEI", "shape": "dot", "title": "SPEI (Secondary Topics)", "value": 14}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "RCP8.5", "label": "RCP8.5", "shape": "dot", "title": "RCP8.5 (Methodology (more detailed))", "value": 16}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Snow Cover", "label": "Snow Cover", "shape": "dot", "title": "Snow Cover (Secondary Topics)", "value": 35}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "ERA5-L", "label": "ERA5-L", "shape": "dot", "title": "ERA5-L (Methodology (more detailed))", "value": 13}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Temperature", "label": "Temperature", "shape": "dot", "title": "Temperature (Secondary Topics)", "value": 17}, {"color": "#3D8664", "font": {"color": "black"}, "id": "Dendroclimatic analysis", "label": "Dendroclimatic analysis", "shape": "dot", "title": "Dendroclimatic analysis (Methodology)", "value": 11}, {"color": "#EABA77", "font": {"color": "black"}, "id": "Pirin Mountains", "label": "Pirin Mountains", "shape": "dot", "title": "Pirin Mountains (Regional Focus)", "value": 16}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Post-fire Succession", "label": "Post-fire Succession", "shape": "dot", "title": "Post-fire Succession (Secondary Topics)", "value": 6}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "abundance monitoring", "label": "abundance monitoring", "shape": "dot", "title": "abundance monitoring (Methodology (more detailed))", "value": 6}, {"color": "#EABA77", "font": {"color": "black"}, "id": "Plovdiv region", "label": "Plovdiv region", "shape": "dot", "title": "Plovdiv region (Regional Focus)", "value": 10}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Lake Ecosystems", "label": "Lake Ecosystems", "shape": "dot", "title": "Lake Ecosystems (Secondary Topics)", "value": 7}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Tourism Pressure", "label": "Tourism Pressure", "shape": "dot", "title": "Tourism Pressure (Secondary Topics)", "value": 7}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "ECMWF", "label": "ECMWF", "shape": "dot", "title": "ECMWF (Methodology (more detailed))", "value": 7}, {"color": "#EABA77", "font": {"color": "black"}, "id": "Seven Rila Lakes", "label": "Seven Rila Lakes", "shape": "dot", "title": "Seven Rila Lakes (Regional Focus)", "value": 20}, {"color": "#EABA77", "font": {"color": "black"}, "id": "Northwest Bulgaria", "label": "Northwest Bulgaria", "shape": "dot", "title": "Northwest Bulgaria (Regional Focus)", "value": 10}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "NDSI", "label": "NDSI", "shape": "dot", "title": "NDSI (Methodology (more detailed))", "value": 29}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Glaciers", "label": "Glaciers", "shape": "dot", "title": "Glaciers (Secondary Topics)", "value": 11}, {"color": "#EABA77", "font": {"color": "black"}, "id": "National (Mountainous regions)", "label": "National (Mountainous regions)", "shape": "dot", "title": "National (Mountainous regions) (Regional Focus)", "value": 13}, {"color": "#7A005E", "font": {"color": "black"}, "id": "Energy \u0026 Industry", "label": "Energy \u0026 Industry", "shape": "dot", "title": "Energy \u0026 Industry (Primary Theme)", "value": 20}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Energy Transition", "label": "Energy Transition", "shape": "dot", "title": "Energy Transition (Secondary Topics)", "value": 13}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "Interviews", "label": "Interviews", "shape": "dot", "title": "Interviews (Methodology (more detailed))", "value": 14}, {"color": "#EABA77", "font": {"color": "black"}, "id": "Stara Zagora", "label": "Stara Zagora", "shape": "dot", "title": "Stara Zagora (Regional Focus)", "value": 13}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "SWI", "label": "SWI", "shape": "dot", "title": "SWI (Methodology (more detailed))", "value": 14}, {"color": "#EABA77", "font": {"color": "black"}, "id": "Vitosha mountain", "label": "Vitosha mountain", "shape": "dot", "title": "Vitosha mountain (Regional Focus)", "value": 12}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "Bioindicators", "label": "Bioindicators", "shape": "dot", "title": "Bioindicators (Methodology (more detailed))", "value": 16}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Altitude Records", "label": "Altitude Records", "shape": "dot", "title": "Altitude Records (Secondary Topics)", "value": 6}, {"color": "#9CD1B7", "font": {"color": "black"}, "id": "Monitoring survey", "label": "Monitoring survey", "shape": "dot", "title": "Monitoring survey (Methodology (more detailed))", "value": 6}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Duration", "label": "Duration", "shape": "dot", "title": "Duration (Secondary Topics)", "value": 10}, {"color": "#CCA1BC", "font": {"color": "black"}, "id": "Heat Stress", "label": "Heat Stress", "shape": "dot", "title": "Heat Stress (Secondary Topics)", "value": 10}]);
+                  edges = new vis.DataSet([{"from": "Forestry", "to": "Circular Economy", "value": 2}, {"from": "Forestry", "to": "Literature review", "value": 2}, {"from": "Forestry", "to": "National", "value": 5}, {"from": "Forestry", "to": "Statistical modelling", "value": 5}, {"from": "Forestry", "to": "Species Distribution", "value": 2}, {"from": "Forestry", "to": "Temperature", "value": 2}, {"from": "Forestry", "to": "Dendroclimatic analysis", "value": 2}, {"from": "Circular Economy", "to": "Literature review", "value": 2}, {"from": "Circular Economy", "to": "National", "value": 3}, {"from": "Literature review", "to": "National", "value": 14}, {"from": "Literature review", "to": "Agriculture", "value": 5}, {"from": "Literature review", "to": "Resilience", "value": 2}, {"from": "Literature review", "to": "Policy \u0026 Governance", "value": 4}, {"from": "Literature review", "to": "Infrastructure", "value": 2}, {"from": "National", "to": "Hydrology", "value": 11}, {"from": "National", "to": "Floods", "value": 3}, {"from": "National", "to": "Precipitation", "value": 4}, {"from": "National", "to": "Statistical modelling", "value": 18}, {"from": "National", "to": "Biodiversity", "value": 3}, {"from": "National", "to": "Policy \u0026 Governance", "value": 9}, {"from": "National", "to": "Adaptation", "value": 2}, {"from": "National", "to": "Questionnaire survey", "value": 6}, {"from": "National", "to": "Agriculture", "value": 10}, {"from": "National", "to": "Public Health", "value": 3}, {"from": "National", "to": "RCP8.5", "value": 2}, {"from": "National", "to": "Infrastructure", "value": 2}, {"from": "National", "to": "Field experiment", "value": 3}, {"from": "Remote sensing", "to": "Biodiversity", "value": 4}, {"from": "Remote sensing", "to": "Sentinel (Copernicus Satellite Data)", "value": 9}, {"from": "Remote sensing", "to": "Landsat (OLI / TIRS) satellites", "value": 3}, {"from": "Remote sensing", "to": "ERA5", "value": 2}, {"from": "Remote sensing", "to": "Ecosystem Services", "value": 2}, {"from": "Remote sensing", "to": "NDVI", "value": 4}, {"from": "Remote sensing", "to": "NDWI", "value": 3}, {"from": "Remote sensing", "to": "NDGI", "value": 2}, {"from": "Remote sensing", "to": "Rila Mountain", "value": 2}, {"from": "Remote sensing", "to": "Urban Environment", "value": 2}, {"from": "Remote sensing", "to": "Urban Heat Island", "value": 2}, {"from": "Remote sensing", "to": "Hydrology", "value": 4}, {"from": "Remote sensing", "to": "Snow Cover", "value": 3}, {"from": "Remote sensing", "to": "NDSI", "value": 5}, {"from": "Remote sensing", "to": "SWI", "value": 2}, {"from": "Hydrology", "to": "Drought", "value": 2}, {"from": "Hydrology", "to": "Floods", "value": 5}, {"from": "Hydrology", "to": "Precipitation", "value": 7}, {"from": "Hydrology", "to": "Statistical modelling", "value": 16}, {"from": "Hydrology", "to": "Sentinel (Copernicus Satellite Data)", "value": 4}, {"from": "Hydrology", "to": "Northwest Bulgaria", "value": 2}, {"from": "Hydrology", "to": "Snow Cover", "value": 5}, {"from": "Hydrology", "to": "NDSI", "value": 5}, {"from": "Hydrology", "to": "SWI", "value": 2}, {"from": "Hydrology", "to": "Vitosha mountain", "value": 2}, {"from": "Hydrology", "to": "Duration", "value": 2}, {"from": "Drought", "to": "Statistical modelling", "value": 2}, {"from": "Drought", "to": "SPEI", "value": 2}, {"from": "Floods", "to": "Precipitation", "value": 2}, {"from": "Floods", "to": "Statistical modelling", "value": 3}, {"from": "Precipitation", "to": "Statistical modelling", "value": 8}, {"from": "Precipitation", "to": "Spatial Distribution", "value": 2}, {"from": "Statistical modelling", "to": "Urban Environment", "value": 2}, {"from": "Statistical modelling", "to": "Air Temperature", "value": 2}, {"from": "Statistical modelling", "to": "Agriculture", "value": 6}, {"from": "Statistical modelling", "to": "South Bulgaria", "value": 2}, {"from": "Statistical modelling", "to": "Biodiversity", "value": 4}, {"from": "Statistical modelling", "to": "Species Distribution", "value": 3}, {"from": "Statistical modelling", "to": "Ecosystem Services", "value": 2}, {"from": "Statistical modelling", "to": "Vulnerability Index", "value": 2}, {"from": "Statistical modelling", "to": "Public Health", "value": 3}, {"from": "Statistical modelling", "to": "SPEI", "value": 2}, {"from": "Statistical modelling", "to": "Policy \u0026 Governance", "value": 3}, {"from": "Statistical modelling", "to": "RCP8.5", "value": 2}, {"from": "Statistical modelling", "to": "ERA5-L", "value": 3}, {"from": "Statistical modelling", "to": "Lake Ecosystems", "value": 2}, {"from": "Statistical modelling", "to": "Tourism Pressure", "value": 2}, {"from": "Statistical modelling", "to": "ECMWF", "value": 2}, {"from": "Statistical modelling", "to": "Seven Rila Lakes", "value": 2}, {"from": "Statistical modelling", "to": "Northwest Bulgaria", "value": 2}, {"from": "Statistical modelling", "to": "Snow Cover", "value": 2}, {"from": "Statistical modelling", "to": "Duration", "value": 2}, {"from": "Urban Environment", "to": "Urban Heat Island", "value": 3}, {"from": "Tourism", "to": "Ski Industry", "value": 2}, {"from": "Tourism", "to": "Questionnaire survey", "value": 2}, {"from": "Tourism", "to": "Pamporovo resort", "value": 2}, {"from": "Ski Industry", "to": "Questionnaire survey", "value": 2}, {"from": "Ski Industry", "to": "Pamporovo resort", "value": 2}, {"from": "Questionnaire survey", "to": "Pamporovo resort", "value": 2}, {"from": "Questionnaire survey", "to": "Adaptation", "value": 2}, {"from": "Questionnaire survey", "to": "Agriculture", "value": 5}, {"from": "Questionnaire survey", "to": "Policy \u0026 Governance", "value": 2}, {"from": "Questionnaire survey", "to": "Extreme Events", "value": 2}, {"from": "Questionnaire survey", "to": "Farmers\u0027 Survey", "value": 2}, {"from": "Questionnaire survey", "to": "SPI-3", "value": 2}, {"from": "Questionnaire survey", "to": "Correlation analysis", "value": 2}, {"from": "Questionnaire survey", "to": "Energy Transition", "value": 2}, {"from": "Questionnaire survey", "to": "Interviews", "value": 2}, {"from": "Agriculture", "to": "South Bulgaria", "value": 2}, {"from": "Agriculture", "to": "Resilience", "value": 2}, {"from": "Agriculture", "to": "Northeast Bulgaria", "value": 2}, {"from": "Agriculture", "to": "Maize", "value": 2}, {"from": "Agriculture", "to": "Field experiment", "value": 8}, {"from": "Agriculture", "to": "Central Northern Bulgaria", "value": 2}, {"from": "Agriculture", "to": "Biodiversity", "value": 2}, {"from": "Agriculture", "to": "Plovdiv region", "value": 2}, {"from": "Agriculture", "to": "Heat Stress", "value": 2}, {"from": "Field experiment", "to": "Infrastructure", "value": 2}, {"from": "Field experiment", "to": "Central Northern Bulgaria", "value": 2}, {"from": "Field experiment", "to": "Biodiversity", "value": 7}, {"from": "Field experiment", "to": "Glaciers", "value": 2}, {"from": "Field experiment", "to": "Pirin Mountains", "value": 2}, {"from": "Field experiment", "to": "Bioindicators", "value": 2}, {"from": "Field experiment", "to": "Heat Stress", "value": 2}, {"from": "Biodiversity", "to": "Laboratory analysis", "value": 6}, {"from": "Biodiversity", "to": "Sentinel (Copernicus Satellite Data)", "value": 3}, {"from": "Biodiversity", "to": "Landsat (OLI / TIRS) satellites", "value": 2}, {"from": "Biodiversity", "to": "ERA5", "value": 2}, {"from": "Biodiversity", "to": "Ecosystem Services", "value": 3}, {"from": "Biodiversity", "to": "NDVI", "value": 3}, {"from": "Biodiversity", "to": "NDWI", "value": 3}, {"from": "Biodiversity", "to": "Rila Mountain", "value": 2}, {"from": "Biodiversity", "to": "Post-fire Succession", "value": 2}, {"from": "Biodiversity", "to": "abundance monitoring", "value": 2}, {"from": "Biodiversity", "to": "Central Northern Bulgaria", "value": 2}, {"from": "Biodiversity", "to": "Seven Rila Lakes", "value": 3}, {"from": "Biodiversity", "to": "Glaciers", "value": 2}, {"from": "Biodiversity", "to": "Pirin Mountains", "value": 2}, {"from": "Biodiversity", "to": "Bioindicators", "value": 3}, {"from": "Ecosystem Services", "to": "NDVI", "value": 2}, {"from": "Ecosystem Services", "to": "NDWI", "value": 2}, {"from": "Western Rhodopes", "to": "Bioindicators", "value": 2}, {"from": "Sentinel (Copernicus Satellite Data)", "to": "Landsat (OLI / TIRS) satellites", "value": 3}, {"from": "Sentinel (Copernicus Satellite Data)", "to": "NDVI", "value": 3}, {"from": "Sentinel (Copernicus Satellite Data)", "to": "Snow Cover", "value": 3}, {"from": "Sentinel (Copernicus Satellite Data)", "to": "NDSI", "value": 5}, {"from": "Sentinel (Copernicus Satellite Data)", "to": "NDWI", "value": 2}, {"from": "Sentinel (Copernicus Satellite Data)", "to": "SWI", "value": 2}, {"from": "Landsat (OLI / TIRS) satellites", "to": "NDVI", "value": 2}, {"from": "NDVI", "to": "NDWI", "value": 3}, {"from": "NDVI", "to": "NDGI", "value": 2}, {"from": "Rila Mountain", "to": "NDSI", "value": 2}, {"from": "Snow Cover", "to": "NDSI", "value": 5}, {"from": "Snow Cover", "to": "SWI", "value": 2}, {"from": "Snow Cover", "to": "Vitosha mountain", "value": 2}, {"from": "Snow Cover", "to": "Duration", "value": 2}, {"from": "Temperature", "to": "Dendroclimatic analysis", "value": 2}, {"from": "Pirin Mountains", "to": "Glaciers", "value": 2}, {"from": "NDSI", "to": "SWI", "value": 3}, {"from": "NDSI", "to": "National (Mountainous regions)", "value": 2}, {"from": "Energy \u0026 Industry", "to": "Stara Zagora", "value": 2}, {"from": "Bioindicators", "to": "Altitude Records", "value": 2}, {"from": "Bioindicators", "to": "Monitoring survey", "value": 2}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.2,
+            "damping": 0.09,
+            "nodeDistance": 160,
+            "springConstant": 0.05,
+            "springLength": 220
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
